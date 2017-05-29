@@ -17,10 +17,10 @@ public class Sandbox {
 
         game.startGame();
 
-        while (!game.isOver()) {
-            System.out.println(game.toString());
-            game.play((currentPlayer, board, opponentHasNonPlayedBlots) -> currentPlayer.play(board, opponentHasNonPlayedBlots));
-        }
         System.out.println(game.toString());
+        while (!game.isOver()) {
+            game.play((currentPlayer, board, opponentHasNonPlayedBlots) -> currentPlayer.play(board, opponentHasNonPlayedBlots));
+            System.out.println(game.toString());
+        }
     }
 }

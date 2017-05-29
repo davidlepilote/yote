@@ -56,9 +56,11 @@ public class Game {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(String.format("### TURN %d ###\n", turn++));
+        builder.append(String.format("### TURN %d ###\n\n", turn++));
+        builder.append(board.toString());
+        builder.append("\n");
         if (currentMove != null) {
-            builder.append(String.format("Player %d plays : %s\n", player1Turn ? 1 : 2, currentMove.toString()));
+            builder.append(String.format("Player %d plays : %s\n", player1Turn ? 2 : 1, currentMove.toString()));
         }
         if(isOver()) {
             builder.append(String.format("Player %d has won", players[0].hasLost(board) ? 2 : 1));
