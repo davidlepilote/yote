@@ -19,7 +19,7 @@ public class Sandbox {
 
         while (!game.isOver()) {
             System.out.println(game.toString());
-            game.play((currentPlayer, board) -> currentPlayer.play(board));
+            game.play((currentPlayer, board, opponentHasNonPlayedBlots) -> currentPlayer.play(board, opponentHasNonPlayedBlots));
         }
         System.out.println(game.toString());
     }

@@ -7,6 +7,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by David et Monireh on 15/11/2016.
@@ -64,8 +65,12 @@ public abstract class Player implements Playable {
         return blots.pop();
     }
 
-    public int blotsLeft() {
-        return blots.size();
+    public int blotsLeft(Board board) {
+        return blots.size() + (int) Stream.of(board.cases).flatMap(Stream::of).filter(aCase -> aCase.isSameColor(color)).count();
+    }
+
+    public boolean hasNonPlayedBlots() {
+        return !blots.isEmpty();
     }
 
     /**
@@ -77,7 +82,7 @@ public abstract class Player implements Playable {
      * @param board
      * @return all legal moves for the given player and board
      */
-    public List<Move> legalMoves(Board board) {
+    public List<Move> legalMoves(Board board, boolean opponentHasNonPlayedBlots) {
         List<Move> moves = new ArrayList<>();
         for (Board.Case aCase : board) {
             // Try to add a ADD Move
@@ -101,7 +106,9 @@ public abstract class Player implements Playable {
                             }
                         }
                         // The opponent other blot is taken from his own stack
-                        moves.add(new Move(Move.MoveType.JUMP, aCase, opponentCase, jumpedCase, null));
+                        if (opponentHasNonPlayedBlots) {
+                            moves.add(new Move(Move.MoveType.JUMP, aCase, opponentCase, jumpedCase, null));
+                        }
                     }
                 }
             }
@@ -109,7 +116,7 @@ public abstract class Player implements Playable {
         return moves;
     }
 
-    public boolean hasLost() {
-        return blots.isEmpty();
+    public boolean hasLost(Board board) {
+        return blots.size() == 0 && Stream.of(board.cases).flatMap(Stream::of).filter(aCase -> aCase.isSameColor(color)).count() == 0;
     }
 }

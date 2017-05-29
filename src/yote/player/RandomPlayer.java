@@ -17,8 +17,8 @@ public class RandomPlayer extends Player {
     }
 
     @Override
-    public Move play(Board board) {
-        final List<Move> moves = legalMoves(board);
+    public Move play(Board board, boolean opponentHasNonPlayedBlots) {
+        final List<Move> moves = legalMoves(board, opponentHasNonPlayedBlots);
         return moves.get(random.nextInt(moves.size()));
     }
 

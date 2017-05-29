@@ -8,7 +8,7 @@ import yote.player.Player;
 public class Game {
 
     public interface Turn {
-        public Player.Move play(Player currentPlayer, Board board);
+        Player.Move play(Player currentPlayer, Board board, boolean opponentHasNonPlayedBlots);
     }
 
     private Board board = new Board();
@@ -18,6 +18,8 @@ public class Game {
     private boolean player1Turn = true;
 
     private int turn = 0;
+
+    private Player.Move currentMove;
 
     public Game(Player player1, Player player2) {
         players[0] = player1;
@@ -34,7 +36,7 @@ public class Game {
     }
 
     public boolean isOver() {
-        return players[0].hasLost() || players[1].hasLost();
+        return players[0].hasLost(board) || players[1].hasLost(board);
     }
 
     public Player currentPlayer() {
@@ -46,19 +48,22 @@ public class Game {
     }
 
     public void play(Turn turn) {
-        final Player.Move move = turn.play(currentPlayer(), board);
-        board.playMove(currentPlayer(), opponentPlayer(), move);
+        currentMove = turn.play(currentPlayer(), board, opponentPlayer().hasNonPlayedBlots());
+        board.playMove(currentPlayer(), opponentPlayer(), currentMove);
         player1Turn = !player1Turn;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(String.format("### TURN %d ###\n", ++turn));
+        builder.append(String.format("### TURN %d ###\n", turn++));
+        if (currentMove != null) {
+            builder.append(String.format("Player %d plays : %s\n", player1Turn ? 1 : 2, currentMove.toString()));
+        }
         if(isOver()) {
-            builder.append(String.format("Player %d has won", players[0].hasLost() ? 2 : 1));
+            builder.append(String.format("Player %d has won", players[0].hasLost(board) ? 2 : 1));
         } else {
-            builder.append(String.format("Player 1 has %d blots left\nPlayer 2 has %d blots left", players[0].blotsLeft(), players[1].blotsLeft()));
+            builder.append(String.format("Player 1 has %d blots left\nPlayer 2 has %d blots left", players[0].blotsLeft(board), players[1].blotsLeft(board)));
         }
         builder.append("\n");
         return builder.toString();
