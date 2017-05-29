@@ -2,6 +2,7 @@ package yote;
 
 import javafx.util.Pair;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import yote.player.Player;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -138,6 +139,13 @@ public class Board implements Iterable<Board.Case>{
                 }
                 break;
         }
+    }
+
+    public void clear() {
+        for (Case aCase : this) {
+            aCase.blot = null;
+        }
+        deadBlots.clear();
     }
 
     private Case getCase(Case aCase){

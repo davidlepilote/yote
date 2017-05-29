@@ -1,6 +1,7 @@
-package yote;
+package yote.player;
 
 import javafx.util.Pair;
+import yote.Board;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by David et Monireh on 15/11/2016.
  */
-public class Player implements Playable {
+public abstract class Player implements Playable {
 
     public static class Move {
 
@@ -44,11 +45,16 @@ public class Player implements Playable {
 
     private final Board.Blot.BlotColor color;
 
-    private final Deque<Board.Blot> blots;
+    private final Deque<Board.Blot> blots = new ArrayDeque<>(NB_BLOTS);
 
     public Player(Board.Blot.BlotColor color) {
         this.color = color;
-        this.blots = new ArrayDeque<>(NB_BLOTS);
+        init();
+    }
+
+    @Override
+    public void init() {
+        this.blots.clear();
         for (int nbBlot = 0; nbBlot < NB_BLOTS; nbBlot++) {
             blots.add(new Board.Blot(this.color));
         }
@@ -58,10 +64,8 @@ public class Player implements Playable {
         return blots.pop();
     }
 
-    @Override
-    public Move play(Board board) {
-        final List<Move> moves = legalMoves(board);
-        return moves.get(0);
+    public int blotsLeft() {
+        return blots.size();
     }
 
     /**
@@ -103,5 +107,9 @@ public class Player implements Playable {
             }
         }
         return moves;
+    }
+
+    public boolean hasLost() {
+        return blots.isEmpty();
     }
 }

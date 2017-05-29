@@ -1,0 +1,30 @@
+package yote.player;
+
+import yote.Board;
+
+import java.util.List;
+import java.util.Random;
+
+/**
+ * Created by David et Monireh on 29/05/2017.
+ */
+public class RandomPlayer extends Player {
+
+    Random random;
+
+    public RandomPlayer(Board.Blot.BlotColor color) {
+        super(color);
+    }
+
+    @Override
+    public Move play(Board board) {
+        final List<Move> moves = legalMoves(board);
+        return moves.get(random.nextInt(moves.size()));
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        random = new Random();
+    }
+}
